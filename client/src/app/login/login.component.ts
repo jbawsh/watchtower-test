@@ -1,18 +1,21 @@
 import { Component, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { AuthGuard } from '../auth.service';
+
 declare const gapi: any;
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  providers: [ AuthGuard ]
 })
 
 export class LoginComponent {
   googleLoginButtonId = 'google-login-button';
 
-  constructor( private _zone: NgZone,private router:Router) {}
+  constructor( private _zone: NgZone,private router:Router, private authGuard: AuthGuard) {}
 
   ngAfterViewInit() { // Converts the Google login button stub to an actual button.
     gapi.signin2.render(this.googleLoginButtonId, {
@@ -36,8 +39,17 @@ export class LoginComponent {
       localStorage.setItem('email', email);
       localStorage.setItem('google_token', auth_token);
 
+      this.authGuard.getToken().subscribe(
+        data => {
+          console.log(data._body);
+          localStorage.setItem('my_token', data._body);
+          this.router.navigate(['/members']);
+        },
+        error => console.error("error retrieving data", error)
+        );
+
       //console.log(email);
-      this.router.navigate(['/members']);
+
 
       //console.log(localStorage.getItem('google_token'));
     });
