@@ -10,7 +10,8 @@ import { AuthGuard } from './auth.service';
 export const router: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
-    { path: 'members', component: MembersComponent, canActivate: [AuthGuard] }
+    { path: 'members', component: MembersComponent, canActivate: [AuthGuard] },
+    { path: '**', redirectTo: 'login', pathMatch: 'full' }
 ]
 
 export const routes: ModuleWithProviders = RouterModule.forRoot(router);

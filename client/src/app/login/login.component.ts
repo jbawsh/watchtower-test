@@ -31,10 +31,15 @@ export class LoginComponent {
     this._zone.run(() => {
       var email = user.getBasicProfile().getEmail();
       var auth_token = user.getAuthResponse().id_token;
-      console.log(email);
+
+      // Store token in local storage for authentication
+      localStorage.setItem('email', email);
+      localStorage.setItem('google_token', auth_token);
+
+      //console.log(email);
       this.router.navigate(['/members']);
-        // Use a service to store authenticate with backend
-        // Store token in local storage for authentication
+
+      //console.log(localStorage.getItem('google_token'));
     });
   }
 
