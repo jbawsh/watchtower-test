@@ -6,6 +6,7 @@ import (
   "os"
   "time"
   "fmt"
+  "io/ioutil"
   //"reflect"
   //"log"
   "github.com/gorilla/mux"
@@ -116,6 +117,14 @@ var GetTokenHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reque
     w.Header().Set("Access-Control-Allow-Origin", origin)
   }
 
+  //decoder := json.NewDecoder(r.Body.Get())
+
+  body, err := ioutil.ReadAll(r.Body)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Println(string(body))
   //body := r.Body
 
   //fmt.Println(body)
@@ -125,7 +134,7 @@ var GetTokenHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reque
 
   claims := token.Claims.(jwt.MapClaims)
 
-  claims["google"] = "test"
+  claims["google"] = string(body)
   claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
   //sign the token
